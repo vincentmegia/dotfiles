@@ -1,32 +1,15 @@
 return {
-  "ellisonleao/gruvbox.nvim",
+  "folke/tokyonight.nvim",
+  --"rebelot/kanagawa.nvim",
+  lazy = false,
+  -- "ellisonleao/gruvbox.nvim",
+  --dir = "~/repository/gruvbox-stupendous.nvim",
   priority = 1000,
-  config = function()
-    local colorscheme = require('gruvbox')
-    colorscheme.setup({
-      highlights = {
-        Comment = { italic = true },
-        Directory = { bold = true },
-        ErrorMsg = { italic = true, bold = true }
-      },
-      styles = {
-        types = "bold italic",
-        methods = "bold italic underline",
-        numbers = "NONE",
-        strings = "NONE",
-        comments = "italic",
-        keywords = "bold,italic",
-        constants = "NONE",
-        functions = "bold,italic",
-        operators = "NONE",
-        variables = "NONE",
-        parameters = "NONE",
-        conditionals = "italic",
-        virtual_text = "NONE",
-      },
-    })
-  end,
-  init = function ()
-    vim.cmd.colorscheme('gruvbox')
+  --config = true,
+  init = function()
+    vim.opt.background = "dark"
+    --vim.cmd("colorscheme gruvbox")
+    vim.cmd("colorscheme tokyonight-storm")
+    --vim.cmd("colorscheme kanagawa-wave")
   end,
 }

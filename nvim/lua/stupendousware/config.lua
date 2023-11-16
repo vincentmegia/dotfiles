@@ -15,7 +15,8 @@ opt.termguicolors = true
 opt.swapfile = false
 opt.backspace = 'indent,eol,start'
 opt.background = 'dark'
-
+-- opt.foldmethod = 'expr'
+-- opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
 -- autocomplete features
 opt.completeopt = { 'menuone', 'noselect', 'noinsert' }
@@ -27,3 +28,5 @@ keymap.set('n', '<leader>pv', vim.cmd.Ex)
 -- workspace level
 vim.wo.number = true
 
+-- commands
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]

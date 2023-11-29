@@ -24,6 +24,11 @@ opt.completeopt = { 'menuone', 'noselect', 'noinsert' }
 
 local keymap = vim.keymap
 keymap.set('n', '<leader>pv', vim.cmd.Ex)
+--remap hjkl+ctrl to move in insert mode and normal mode
+keymap.set('i', '<C-h>', '<Left>')
+keymap.set('i', '<C-j>', '<Down>')
+keymap.set('i', '<C-k>', '<Up>')
+keymap.set('i', '<C-l>', '<Right>')
 
 -- workspace level
 vim.wo.number = true

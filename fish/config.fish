@@ -46,3 +46,8 @@ set LOCAL_CONFIG (dirname (status --current-filename))/config-local.fish
 if test -f $LOCAL_CONFIG
   source $LOCAL_CONFIG
 end
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+set --export --prepend PATH "/Users/vincem/.rd/bin"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+source (pack completion --shell fish)

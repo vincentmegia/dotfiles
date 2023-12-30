@@ -3,9 +3,10 @@ return {
   lazy = true,
   event = { "BufReadPre", "BufNewFile" },
   config = function()
-    require('conform').setup({
+    local conform = require("conform")
+    conform.setup({
       logging = true,
-      log_level = vim.log.levels.WARN,
+      log_level = vim.log.levels.DEBUG,
       formatters_by_ft = {
         lua = { "stylua" },
         javascript = { { "prettierd", "prettier" } },
@@ -23,11 +24,14 @@ return {
       },
     })
 
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      pattern = "*",
-      callback = function(args)
-        require("conform").format({ bufnr = args.buf })
-      end,
-    })
+    vim.keymap.set({ 'n', 'v' }, ',fc', function()
+      conform.format({ async = true, lsp_fallback = false })
+    end)
+    -- vim.api.nvim_create_autocmd("BufWritePre", {
+    --   pattern = "*",
+    --   callback = function(args)
+    --     require("conform").format({ bufnr = args.buf })
+    --   end,
+    -- })
   end,
 }

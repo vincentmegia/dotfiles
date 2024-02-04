@@ -48,6 +48,6 @@ if test -f $LOCAL_CONFIG
 end
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-set --export --prepend PATH "/Users/vincem/.rd/bin"
+#set --export --prepend PATH "/Users/vincem/.rd/bin"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-source (pack completion --shell fish)
+#source (pack completion --shell fish)

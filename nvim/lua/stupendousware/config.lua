@@ -15,6 +15,8 @@ opt.termguicolors = true
 opt.swapfile = false
 opt.backspace = 'indent,eol,start'
 opt.background = 'dark'
+opt.clipboard = 'unnamedplus'
+opt.cursorline = true
 -- opt.foldmethod = 'expr'
 -- opt.foldexpr = 'nvim_treesitter#foldexpr()'
 

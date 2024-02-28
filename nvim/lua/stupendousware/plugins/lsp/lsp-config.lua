@@ -85,6 +85,12 @@ return {
       filetypes = { 'go', 'gomod', 'gowork', 'gotimpl' },
     })
 
+    lsp_config['tailwindcss'].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { 'templ' },
+    })
+
     lsp_config['lua_ls'].setup({
       capabilities = capabilities,
       on_attach = on_attach,

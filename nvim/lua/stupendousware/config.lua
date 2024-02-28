@@ -17,6 +17,7 @@ opt.backspace = 'indent,eol,start'
 opt.background = 'dark'
 opt.clipboard = 'unnamedplus'
 opt.cursorline = true
+
 -- opt.foldmethod = 'expr'
 -- opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
@@ -34,6 +35,7 @@ keymap.set('i', '<C-l>', '<Right>')
 
 -- workspace level
 vim.wo.number = true
+--vim.wo.relativenumber = true
 
 -- commands
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]

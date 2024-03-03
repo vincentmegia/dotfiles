@@ -14,7 +14,8 @@ return {
         "typescript",
         "tsx",
         "html",
-        "go"
+        "go",
+        "java"
       },
       sync_install = false,
       highlight = { enable = true },

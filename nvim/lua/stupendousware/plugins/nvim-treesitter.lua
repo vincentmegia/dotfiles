@@ -15,7 +15,8 @@ return {
         "tsx",
         "html",
         "go",
-        "java"
+        "java",
+        "templ"
       },
       sync_install = false,
       highlight = { enable = true },

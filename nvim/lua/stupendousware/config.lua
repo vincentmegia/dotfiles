@@ -33,9 +33,14 @@ keymap.set('i', '<C-j>', '<Down>')
 keymap.set('i', '<C-k>', '<Up>')
 keymap.set('i', '<C-l>', '<Right>')
 
+-- debugging
+keymap.set('n', '<leader>dk', function() require('dap').continue() end)
+keymap.set('n', '<leader>dl', function() require('dap').run_last() end)
+keymap.set('n', '<leader>db', function() require('dap').toggle_breakpoint() end)
+
 -- workspace level
 vim.wo.number = true
---vim.wo.relativenumber = true
+vim.wo.relativenumber = true
 
 -- commands
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
@@ -60,3 +65,9 @@ vim.api.nvim_set_keymap(
   'n', '<Leader>spd', ':lua vim.diagnostic.goto_prev()<CR>',
   { noremap = true, silent = true }
 )
+
+vim.filetype.add({
+  extension = {
+    templ = "templ",
+  },
+})

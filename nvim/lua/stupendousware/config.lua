@@ -71,3 +71,6 @@ vim.filetype.add({
     templ = "templ",
   },
 })
+
+vim.api.nvim_set_keymap('n', '<Leader>cgt', ":w | :!templ generate <CR>",
+  { noremap = true, silent = true })

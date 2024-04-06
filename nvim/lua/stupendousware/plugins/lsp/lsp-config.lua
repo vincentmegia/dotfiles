@@ -20,7 +20,7 @@ return {
     local cmp_nvim_lsp = require('cmp_nvim_lsp')
 
     local keymap = vim.keymap
-    local on_attach = function(client, bufnr)
+    local on_attach = function(_, bufnr)
       local opts = { noremap = true, silent = true, buffer = bufnr }
       local lspbuf = vim.lsp.buf
       local diagnostics = vim.diagnostic

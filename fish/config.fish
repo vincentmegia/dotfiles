@@ -30,6 +30,11 @@ set -gx PATH node_modules/.bin $PATH
 set -g GOPATH $HOME/go
 set -gx PATH $GOPATH/bin $PATH
 
+# Java
+set -g JAVA_HOME /opt/homebrew/opt/openjdk@21
+set -gx PATH $JAVA_HOME/bin $PATH
+
+
 # NVM
 function __check_rvm --on-variable PWD --description 'Do nvm stuff'
   status --is-command-substitution; and return

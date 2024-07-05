@@ -1,6 +1,7 @@
 -- If you started neovim within `~/dev/xy/project-1` this would resolve to `project-1`
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-local workspace_dir = '/Users/stupendousman/Repository/' .. project_name
+local basepath = '/Users/vincem'
+local workspace_dir = basepath .. '/Repository/' .. project_name
 --                                               ^^
 --                                               string concattenation in Lua
 local config = {
@@ -20,19 +21,19 @@ local config = {
     '-Dlog.level=ALL',
     '-Xmx1g',
     '--add-modules=ALL-SYSTEM',
-    '-javaagent:/Users/stupendousman/Repository/tools/jdtls/lombok.jar',
+    '-javaagent:/Users/vincem/Repository/tools/jdtls/lombok.jar',
     '--add-opens', 'java.base/java.util=ALL-UNNAMED',
     '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
 
     -- ??
-    '-jar', '/opt/homebrew/Cellar/jdtls/1.33.0/libexec/plugins/org.eclipse.equinox.launcher_1.6.700.v20231214-2017.jar',
+    '-jar', '/opt/homebrew/Cellar/jdtls/1.37.0/libexec/plugins/org.eclipse.equinox.launcher_1.6.900.v20240613-2009.jar',
     -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                       ^^^^^^^^^^^^^^
     -- Must point to the                                                     Change this to
     -- eclipse.jdt.ls installation                                           the actual version
 
 
     -- ??
-    '-configuration', '/opt/homebrew/Cellar/jdtls/1.33.0/libexec/config_mac_arm',
+    '-configuration', '/opt/homebrew/Cellar/jdtls/1.37.0/libexec/config_mac_arm',
     -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        ^^^^^^
     -- Must point to the                      Change to one of `linux`, `win` or `mac`
     -- eclipse.jdt.ls installation            Depending on your system.
@@ -59,7 +60,7 @@ local config = {
   -- If you don't plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
   init_options = {
     bundles = {
-      vim.fn.glob("/Users/stupendousman/Repository/tools/java-debug/bin/com.microsoft.java.debug.plugin*.jar", 1)
+      vim.fn.glob(basepath .. "/Repository/tools/java-debug/bin/com.microsoft.java.debug.plugin*.jar", 1)
     }
   },
   on_attach = function()

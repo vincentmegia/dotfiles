@@ -3,7 +3,7 @@ return {
   dependencies = {
     'williamboman/mason-lspconfig.nvim',
   },
-  config = function()
+  opts = function()
     -- import mason
     local mason = require('mason')
     -- import mason-lspconfig
@@ -26,9 +26,10 @@ return {
         'tsserver',
         'html',
         'cssls',
---        'tailwindcss',
+        'tailwindcss',
         'lua_ls',
         'gopls',
+        'jdtls',
       },
       -- auto-install configured servers (with lspconfig)
       automatic_installation = true, -- not the same as ensure_installed

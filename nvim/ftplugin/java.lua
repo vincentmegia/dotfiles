@@ -2,15 +2,15 @@
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 local basepath = '/Users/vincem'
 local workspace_dir = basepath .. '/Repository/' .. project_name
---                                               ^^
---                                               string concattenation in Lua
-local config = {
-  --[[   cmd = { '/opt/homebrew/bin/jdtls' }, ]]
-  -- The command that starts the language server
-  -- See: https://github.com/eclipse/eclipse.jdt.ls#running-from-the-command-line
-  cmd = {
 
-    -- ??
+local bundles = {
+  vim.fn.glob(basepath .. "/Repository/tools/java-debug/bin/com.microsoft.java.debug.plugin*.jar", 1)
+}
+-- This is the new part
+vim.list_extend(bundles, vim.split(vim.fn.glob(basepath .. "/Repository/tools/vscode-java-test/server/*.jar", 1), "\n"))
+
+local config = {
+  cmd = {
     'java', -- or '/path/to/java17_or_newer/bin/java'
     -- depends on if `java` is in your $PATH env variable and if it points to the right version.
 
@@ -59,9 +59,7 @@ local config = {
   --
   -- If you don't plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
   init_options = {
-    bundles = {
-      vim.fn.glob(basepath .. "/Repository/tools/java-debug/bin/com.microsoft.java.debug.plugin*.jar", 1)
-    }
+    bundles = bundles
   },
   on_attach = function()
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { desc = "" })
@@ -73,7 +71,6 @@ local config = {
   end
 }
 require('jdtls').start_or_attach(config)
---[[ require("jdtls.dap").setup_dap_main_class_configs() -- discover main class ]]
 --[[ require("jdtls.setup").add_commands()               -- not related to debugging but you probably want this ]]
 
 local bo = vim.bo

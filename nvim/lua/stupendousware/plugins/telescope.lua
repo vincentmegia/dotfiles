@@ -20,6 +20,12 @@ return {
             ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
           },
         },
+        file_ignore_patterns = {
+          "**/*.class",
+          "node_modules",
+          "**/*.bin",
+          "**/*.jar"
+        }
       },
     })
     telescope.load_extension('fzy_native')

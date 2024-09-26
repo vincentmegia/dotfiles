@@ -6,7 +6,37 @@ return {
     { 'antosha417/nvim-lsp-file-operations', config = true },
   },
   config = function()
+    -- define global icons
+    local iconsDap = require("stupendousware.icons").dap
+    local iconsDiagnostics = require("stupendousware.icons").diagnostics
+    vim.fn.sign_define('DapBreakpoint', { text = iconsDap.Breakpoint, texthl = '', linehl = '', numhl = '' })
+    vim.fn.sign_define('DiagnosticSignError', { text = iconsDiagnostics.Error, texthl = 'DiagnosticSignError' })
+    vim.fn.sign_define('DiagnosticSignWarn', { text = iconsDiagnostics.Warn, texthl = 'DiagnosticSignWarn' })
+    vim.fn.sign_define('DiagnosticSignInfo', { text = iconsDiagnostics.Info, texthl = 'DiagnosticSignInfo' })
+    vim.fn.sign_define('DiagnosticSignHint', { text = iconsDiagnostics.Hint, texthl = 'DiagnosticSignHint' })
+
     vim.api.nvim_create_autocmd({ "BufWritePre" }, { pattern = { "*.templ" }, callback = vim.lsp.buf.format })
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single' })
+    -- setup diagnostics icons
+    local icons = require("stupendousware.icons").diagnostics
+    vim.diagnostic.config({
+      severity_sort = true,
+      virtual_text = false,
+      float = { border = 'single' },
+      jump = {
+        _highest = true,
+      },
+      -- commented, not working
+      --[[ signs = {
+        text = {
+          [vim.diagnostic.severity.ERROR] = icons.Error,
+          [vim.diagnostic.severity.WARN] = icons.Warn,
+          [vim.diagnostic.severity.INFO] = icons.Info,
+          [vim.diagnostic.severity.HINT] = icons.Hint,
+        },
+      }, ]]
+    })
+
     -- setup neodev before lspconfig
     -- IMPORTANT: make sure to setup neodev BEFORE lspconfig
     require("neodev").setup({
@@ -25,6 +55,7 @@ return {
       local lspbuf = vim.lsp.buf
       local diagnostics = vim.diagnostic
 
+      -- set base keybindings
       -- set keybindings
       opts.desc = 'Show LSP References'
       keymap.set('n', 'gR', '<cmd>Telescope lsp_references<CR>', opts)
@@ -81,7 +112,7 @@ return {
       filetypes = { "html", "templ" }
     })
 
-    lsp_config['tsserver'].setup({
+    lsp_config['ts_ls'].setup({
       capabilities = capabilities,
       on_attach = on_attach,
       filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
@@ -104,6 +135,12 @@ return {
       capabilities = capabilities,
       on_attach = on_attach,
       filetypes = { 'templ' },
+    })
+
+    lsp_config['yamlls'].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { 'yaml' },
     })
 
     lsp_config['tailwindcss'].setup({

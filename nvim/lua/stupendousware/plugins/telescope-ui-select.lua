@@ -1,7 +1,6 @@
 return {
 	"nvim-telescope/telescope-ui-select.nvim",
 	config = function()
-		print("telescope-ui attached")
 		-- This is your opts table
 		require("telescope").setup({
 			extensions = {

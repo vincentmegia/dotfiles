@@ -9,16 +9,14 @@ return {
 		-- define global icons
 		local iconsDap = require("stupendousware.icons").dap
 		local iconsDiagnostics = require("stupendousware.icons").diagnostics
-		vim.fn.sign_define("DapBreakpoint", { text = iconsDap.Breakpoint, texthl = "", linehl = "", numhl = "" })
-		vim.fn.sign_define("DiagnosticSignError", { text = iconsDiagnostics.Error, texthl = "DiagnosticSignError" })
-		vim.fn.sign_define("DiagnosticSignWarn", { text = iconsDiagnostics.Warn, texthl = "DiagnosticSignWarn" })
-		vim.fn.sign_define("DiagnosticSignInfo", { text = iconsDiagnostics.Info, texthl = "DiagnosticSignInfo" })
-		vim.fn.sign_define("DiagnosticSignHint", { text = iconsDiagnostics.Hint, texthl = "DiagnosticSignHint" })
-
-		vim.api.nvim_create_autocmd({ "BufWritePre" }, { pattern = { "*.templ" }, callback = vim.lsp.buf.format })
+		local fn = vim.fn
+		fn.sign_define("DapBreakpoint", { text = iconsDap.Breakpoint, texthl = "", linehl = "", numhl = "" })
+		fn.sign_define("DiagnosticSignError", { text = iconsDiagnostics.Error, texthl = "DiagnosticSignError" })
+		fn.sign_define("DiagnosticSignWarn", { text = iconsDiagnostics.Warn, texthl = "DiagnosticSignWarn" })
+		fn.sign_define("DiagnosticSignInfo", { text = iconsDiagnostics.Info, texthl = "DiagnosticSignInfo" })
+		fn.sign_define("DiagnosticSignHint", { text = iconsDiagnostics.Hint, texthl = "DiagnosticSignHint" })
 		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
 		-- setup diagnostics icons
-		local icons = require("stupendousware.icons").diagnostics
 		vim.diagnostic.config({
 			severity_sort = true,
 			virtual_text = false,
@@ -82,14 +80,7 @@ return {
 		lsp_config["gopls"].setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
-			cmd = { "gopls" },
 			filetypes = { "go", "gomod", "gowork", "gotempl", "templ" },
-		})
-
-		lsp_config["templ"].setup({
-			capabilities = capabilities,
-			on_attach = on_attach,
-			filetypes = { "templ" },
 		})
 
 		lsp_config["yamlls"].setup({
@@ -102,6 +93,13 @@ return {
 			capabilities = capabilities,
 			on_attach = on_attach,
 			filetypes = { "templ", "astro", "javascript", "typescript", "react" },
+			settings = {
+				tailwindCSS = {
+					includeLanguages = {
+						templ = "html",
+					},
+				},
+			},
 		})
 
 		lsp_config["lua_ls"].setup({

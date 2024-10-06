@@ -3,3 +3,6 @@ flipper
 fontforge/plugin
 karabiner
 yarn
+nvim/.DS_Store
+nvim/lua/.DS_Store
+.DS_Store

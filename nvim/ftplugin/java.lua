@@ -1,16 +1,17 @@
-local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+local fn = vim.fn
+local project_name = fn.fnamemodify(fn.getcwd(), ":p:h:t")
 local basepath = "/Users/vincem"
 local workspace_dir = basepath .. "/Repository/tools/jdtls-workspace/" .. project_name
-local jdtls_dir = "/opt/homebrew/Cellar/jdtls"
+local jdtls_dir = "/opt/homebrew/Cellar/jdtls/1.40.0"
 
 local bundles = {}
 local java_test_bundle =
-	vim.split(vim.fn.glob(basepath .. "/repository/tools/java-debug/bin/com.microsoft.java.debug.plugin-*.jar"), "\n")
+	vim.split(fn.glob(basepath .. "/repository/tools/java-debug/bin/com.microsoft.java.debug.plugin-*.jar"), "\n")
 if java_test_bundle[1] ~= "" then
 	vim.list_extend(bundles, java_test_bundle)
 end
 
-local java_debug_bundle = vim.split(vim.fn.glob(basepath .. "/repository/tools/vscode-java-test/server/*.jar"), "\n")
+local java_debug_bundle = vim.split(fn.glob(basepath .. "/repository/tools/vscode-java-test/server/*.jar"), "\n")
 if java_debug_bundle[1] ~= "" then
 	vim.list_extend(bundles, java_debug_bundle)
 end
@@ -36,14 +37,14 @@ local config = {
 
 		-- ??
 		"-jar",
-		jdtls_dir .. "/1.39.0/libexec/plugins/org.eclipse.equinox.launcher_1.6.900.v20240613-2009.jar",
+		jdtls_dir .. "/libexec/plugins/org.eclipse.equinox.launcher_1.6.900.v20240613-2009.jar",
 		-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                       ^^^^^^^^^^^^^^
 		-- Must point to the                                                     Change this to
 		-- eclipse.jdt.ls installation                                           the actual version
 
 		-- ??
 		"-configuration",
-		jdtls_dir .. "/1.39.0/libexec/config_mac_arm",
+		jdtls_dir .. "/libexec/config_mac_arm",
 		-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        ^^^^^^
 		-- Must point to the                      Change to one of `linux`, `win` or `mac`
 		-- eclipse.jdt.ls installation            Depending on your system.

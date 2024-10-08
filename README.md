@@ -19,3 +19,6 @@ MacOS
 9) NEOVIM SETUP
 10) Download NerdFont CaskaydiaCove, (Font supports icons, glyph and ligatures)
     - Ensure LSP is running
+
+TODO:
+1) Remove LSP warning if filetype is not supported

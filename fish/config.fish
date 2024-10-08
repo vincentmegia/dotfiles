@@ -1,6 +1,6 @@
 set fish_greeting ""
 
-set -gx TERM xterm-256color
+set -gx TERM "screen-256color"
 
 # theme
 set -g theme_color_scheme terminal-dark
@@ -28,10 +28,12 @@ set -gx PATH node_modules/.bin $PATH
 
 # Go
 set -g GOPATH $HOME/go
+set -g GOBIN $GOPATH/bin
 set -gx PATH $GOPATH/bin $PATH
 
 # Java
-set -g JAVA_HOME /opt/homebrew/opt/openjdk@21
+#set -g JAVA_HOME /opt/homebrew/opt/openjdk@21
+set -g JAVA_HOME /opt/homebrew/opt/openjdk@17
 set -gx PATH $JAVA_HOME/bin $PATH
 
 

@@ -47,7 +47,7 @@ return {
 		local keymap = vim.keymap
 
 		local on_attach = function(_, bufnr)
-			require("stupendousware.keymaps").lsp_keymap_setup(bufnr)
+			require("stupendousware.keymaps").lsp_keymap_setup()
 		end
 
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -56,13 +56,13 @@ return {
 		lsp_config["html"].setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
-			filetypes = { "html", "templ" },
+			filetypes = { "html", "htm" },
 		})
 
 		lsp_config["htmx"].setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
-			filetypes = { "html", "templ" },
+			filetypes = { "html", "htmx" },
 		})
 
 		lsp_config["ts_ls"].setup({
@@ -81,6 +81,12 @@ return {
 			capabilities = capabilities,
 			on_attach = on_attach,
 			filetypes = { "go", "gomod", "gowork", "gotempl", "templ" },
+		})
+
+		lsp_config["templ"].setup({
+			capabilities = capabilities,
+			on_attach = on_attach,
+			filetypes = { "templ", "html", "htm" },
 		})
 
 		lsp_config["yamlls"].setup({

@@ -51,3 +51,10 @@ vim.api.nvim_set_keymap("n", "<leader>snd", ":lua vim.diagnostic.goto_next()<CR>
 -- one at a time in the floating window)
 vim.api.nvim_set_keymap("n", "<leader>spd", ":lua vim.diagnostic.goto_prev()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader>ch", ":checkhealth<CR>", { noremap = true, silent = true })
+
+--[[ vim.api.nvim_set_keymap(
+	"n",
+	"<leader>lg",
+	":lua require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit', hidden = true}):toggle()<CR>",
+	{ noremap = true, silent = true }
+) ]]

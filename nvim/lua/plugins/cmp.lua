@@ -1,5 +1,7 @@
-return {
-  {
+local M = {}
+
+function M.setup()
+  M.spec = {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
@@ -11,8 +13,11 @@ return {
       "rafamadriz/friendly-snippets", -- optional: community snippets
     },
     config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
+      local ok_cmp, cmp = pcall(require, "cmp")
+      if not ok_cmp then return end
+
+      local ok_snip, luasnip = pcall(require, "luasnip")
+      if not ok_snip then return end
 
       require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -54,6 +59,11 @@ return {
         }),
       })
     end,
-  },
-}
+  }
+
+  return M
+end
+
+return M
+
 

@@ -7,18 +7,27 @@ function M.setup()
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       local ok, tabby = pcall(require, "tabby")
-      if not ok then
-        return
-      end
+      if not ok then return end
 
       local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
+
+      -- One Dark theme highlights
+      vim.cmd([[
+        highlight TabLineSel  guibg=#61AFEF guifg=#282C34 gui=bold
+        highlight TabLine     guibg=#282C34 guifg=#ABB2BF
+        highlight TabLineFill guibg=#282C34 guifg=#ABB2BF
+        highlight TabLineHead guibg=#282C34 guifg=#98C379 gui=bold
+        highlight TabLineTail guibg=#282C34 guifg=#E06C75 gui=bold
+        highlight TabLineWin  guibg=#282C34 guifg=#C678DD
+      ]])
+
       local theme = {
         fill = "TabLineFill",
-        head = "TabLine",
+        head = "TabLineHead",
         current_tab = "TabLineSel",
         tab = "TabLine",
-        win = "TabLine",
-        tail = "TabLine",
+        win = "TabLineWin",
+        tail = "TabLineTail",
       }
 
       -- Get filename from buffer number
@@ -29,13 +38,12 @@ function M.setup()
         local fname = vim.fn.fnamemodify(name, ":t")
         if devicons_ok then
           local icon = devicons.get_icon(name, vim.fn.fnamemodify(name, ":e"), { default = true }) or ""
-          local result = icon .. " " .. fname
-          return result
+          return icon .. " " .. fname
         end
         return fname
       end
 
-      -- Get representative filename for a tab (first buffer)
+      -- Get representative filename for a tab (first valid buffer)
       local function tab_filename(tabid)
         local wins = vim.api.nvim_tabpage_list_wins(tabid)
         for _, winid in ipairs(wins) do
@@ -50,19 +58,27 @@ function M.setup()
         end
         return "[No Name]"
       end
+
       -- Tabby line setup
       tabby.setup({
         line = function(line)
           return {
+            -- Head
             { "  ", hl = theme.head },
+
+            -- Tabs
             line.tabs().foreach(function(tab)
               local hl = tab.is_current() and theme.current_tab or theme.tab
               local tabid = tab.id or 0
               local fname = tab_filename(tabid)
               return { string.format(" %d: %s ", tab.number(), fname), hl = hl, margin = " " }
             end),
+
             line.spacer(),
+
+            -- Tail
             { "  ", hl = theme.tail },
+
             hl = theme.fill,
           }
         end,

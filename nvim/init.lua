@@ -43,3 +43,4 @@ lazy.setup({
   cmp.spec,
 })
 
+vim.notify("nvim setup", vim.log.levels.INFO)

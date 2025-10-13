@@ -68,24 +68,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- NvimTree: Enter opens file in new tab only in tree
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "NvimTree",
-  callback = function()
-    local api = require("nvim-tree.api")
 
-    vim.keymap.set("n", "<CR>", function()
-      local node = api.tree.get_node_under_cursor()
-      if node and node.absolute_path then
-        vim.cmd("tabnew " .. node.absolute_path)
-      end
-    end, { buffer = true, desc = "Open File in New Tab from NvimTree", noremap = true, silent = true })
-
-    vim.keymap.set("n", "<leader>t", function()
-      local node = api.tree.get_node_under_cursor()
-      if node and node.absolute_path then
-        vim.cmd("tabnew " .. node.absolute_path)
-      end
-    end, { buffer = true, desc = "Open File in New Tab from NvimTree", noremap = true, silent = true })
-  end,
-})
+-----------------------------------------------------------
+-- 🧠 Lazy 
+-----------------------------------------------------------
+map("n", "<leader>ls", "<cmd>Lazy sync<cr>", { desc = "Lazy Sync" })

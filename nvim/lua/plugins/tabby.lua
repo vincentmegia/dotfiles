@@ -3,75 +3,70 @@ local M = {}
 function M.setup()
   M.spec = {
     "nanozuki/tabby.nvim",
+    event = "VimEnter",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       local ok, tabby = pcall(require, "tabby")
-      if not ok then return end
+      if not ok then
+        vim.notify("tabby.nvim not found", vim.log.levels.ERROR)
+        return
+      end
 
-      local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
-      vim.o.showtabline = 2
+      local has_icons, devicons = pcall(require, "nvim-web-devicons")
 
-      -- === Highlight groups for VSCode style ===
-      vim.api.nvim_set_hl(0, "TabLineSel",    { fg="#ffffff", bg="#7aa2f7", bold=true })   -- active tab
-      vim.api.nvim_set_hl(0, "TabLine",       { fg="#a9b1d6", bg="#1e1e2e" })               -- inactive tabs
-      vim.api.nvim_set_hl(0, "TabLineFill",   { fg="#c0caf5", bg="#1e1e2e" })               -- background
+      local theme = {
+        fill        = "TabLineFill",
+        head        = "TabLine",
+        current_tab = "TabLineSel",
+        other_tab   = "TabLine",
+        window      = "TabLine",
+        tail        = "TabLine",
+      }
 
-      -- Setup Tabby with the preset
+      local function filename_from_buf(bufnr)
+        if not bufnr or bufnr == 0 then return "[No Name]" end
+        local name = vim.api.nvim_buf_get_name(bufnr)
+        if name == "" then return "[No Name]" end
+        local fname = vim.fn.fnamemodify(name, ":t")
+        if has_icons then
+          local ext = vim.fn.fnamemodify(name, ":e")
+          local icon = devicons.get_icon(fname, ext, { default = true }) or ""
+          return icon .. " " .. fname
+        end
+        return fname
+      end
+
       tabby.setup({
-        preset = 'active_wins_at_tail',
-        option = {
-          nerdfont      = true,        -- enable Nerd Font icons
-          theme         = {
-            fill        = 'TabLineFill',
-            head        = 'TabLine',
-            current_tab = 'TabLineSel',
-            tab         = 'TabLine',
-            win         = 'TabLine',
-            tail        = 'TabLine',
-          },
-          tab_name = {
-            name_fallback = function(tabid)
-              return tabid
-            end,
-          },
-          buf_name = {
-            mode = 'unique',  -- show unique buffer names
-            suffix = function(bufid)
-              -- show modified indicator
-              return vim.bo[bufid].modified and " ●" or ""
-            end,
-          },
-          win_name = {
-            bufid_as_fallback = true,
-          },
-          left = {
-            { "  ", "TabLine" },
-          },
-          right = {
-            -- buffer count
-            function()
-              return "  " .. #vim.fn.getbufinfo({buflisted = 1})
-            end,
-          },
-          -- Optional: add icons for buffers using Nerd Fonts
-          tab_icon = function(bufid)
-            if devicons_ok then
-              local name = vim.fn.bufname(bufid)
-              local ext = vim.fn.fnamemodify(name, ":e")
-              return devicons.get_icon(name, ext, { default = "" }) .. " "
-            end
-            return ""
-          end,
-          -- Optionally, add diagnostics next to buffer name
-          buf_diagnostics = function(bufid)
-            local errs  = #vim.diagnostic.get(bufid, {severity = vim.diagnostic.severity.ERROR})
-            local warns = #vim.diagnostic.get(bufid, {severity = vim.diagnostic.severity.WARN})
-            local s = ""
-            if errs > 0 then s = s .. " " .. errs end
-            if warns > 0 then s = s .. " " .. warns end
-            return s
-          end,
-        },
+        line = function(line)
+          return {
+            { "  ", hl = theme.head },
+            line.tabs().foreach(function(tab)
+              local hl = tab.is_current() and theme.current_tab or theme.other_tab
+              local tabid = tab.id
+              local wins = vim.api.nvim_tabpage_list_wins(tabid)
+              local name = "[No Name]"
+              if #wins > 0 then
+                local bufnr = vim.api.nvim_win_get_buf(wins[1])
+                name = filename_from_buf(bufnr)
+              end
+              return {
+                string.format(" %d: %s ", tab.number(), name),
+                hl = hl,
+                margin = " ",
+              }
+            end),
+            line.spacer(),
+            { "  ", hl = theme.tail },
+            hl = theme.fill,
+          }
+        end,
+        option = { nerdfont = true },
+      })
+
+      vim.api.nvim_create_autocmd({ "BufEnter", "TabNew", "TabClosed", "BufAdd", "BufDelete" }, {
+        callback = function()
+          vim.cmd("redrawtabline")
+        end,
       })
     end,
   }
@@ -80,4 +75,3 @@ function M.setup()
 end
 
 return M
-

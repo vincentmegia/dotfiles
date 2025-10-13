@@ -13,3 +13,4 @@ vim.o.cursorline = true
 
 -- Always show sign column (for LSP/GitSigns)
 vim.o.signcolumn = "yes"
+vim.o.showtabline = 2

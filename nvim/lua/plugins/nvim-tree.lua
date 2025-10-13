@@ -5,9 +5,15 @@ function M.setup()
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     version = "*",
-    cmd = "NvimTreeToggle",
+    lazy = false, -- ✅ ensure plugin loads on startup
+    priority = 999, -- ✅ load before other UI plugins (optional)
     config = function()
-      local tree = require("nvim-tree")
+      local ok, tree = pcall(require, "nvim-tree")
+      if not ok then
+        vim.notify("nvim-tree not found", vim.log.levels.ERROR)
+        return
+      end
+
       local api = require("nvim-tree.api")
 
       -- === NvimTree Setup ===
@@ -23,31 +29,22 @@ function M.setup()
           icons = { show = { file = true, folder = true, git = true } },
         },
         hijack_cursor = true,
-
-        -- ✅ Correct way to define custom keymaps
+        hijack_unnamed_buffer_when_opening = true,
         on_attach = function(bufnr)
           local api = require("nvim-tree.api")
-
-          -- remove default Enter mapping (important!)
           pcall(vim.keymap.del, "n", "<CR>", { buffer = bufnr })
 
-          -- define our custom <CR> mapping
           vim.keymap.set("n", "<CR>", function()
             local node = api.tree.get_node_under_cursor()
             if not node or not node.absolute_path then
               vim.notify("[nvim-tree] No file selected", vim.log.levels.WARN)
               return
             end
-
             local path = vim.fn.fnameescape(node.absolute_path)
-            vim.notify("Opening in new tab: " .. path)
             vim.cmd("tabnew " .. path)
-
-            -- keep tree open in the left side
             api.tree.focus()
           end, { buffer = bufnr, noremap = true, silent = true, desc = "Open file in new tab" })
 
-          -- optional: key to refocus tree
           vim.keymap.set("n", "<leader>f", function()
             api.tree.focus()
             api.tree.find_file(vim.fn.expand("%:p"))
@@ -55,16 +52,22 @@ function M.setup()
         end,
       })
 
-      -- === Auto open NvimTree if no file is given ===
+      -- === Automatically open tree on startup ===
       vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          if vim.fn.argc() == 0 then
+        callback = function(data)
+          local directory = vim.fn.isdirectory(data.file) == 1
+          if directory then
+            vim.cmd.cd(data.file)
             api.tree.open()
+          else
+            vim.defer_fn(function()
+              api.tree.open()
+            end, 100)
           end
         end,
       })
 
-      -- === Keep tree open in new tabs ===
+      -- === Keep tree open on new tabs ===
       vim.api.nvim_create_autocmd("TabNewEntered", {
         callback = function()
           api.tree.open()

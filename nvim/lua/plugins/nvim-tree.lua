@@ -34,16 +34,44 @@ function M.setup()
           local api = require("nvim-tree.api")
           pcall(vim.keymap.del, "n", "<CR>", { buffer = bufnr })
 
+          -- ======
+          -- <CR>: open in new tab or jump if already open
           vim.keymap.set("n", "<CR>", function()
             local node = api.tree.get_node_under_cursor()
             if not node or not node.absolute_path then
-              vim.notify("[nvim-tree] No file selected", vim.log.levels.WARN)
+              vim.notify("No node under cursor", vim.log.levels.WARN)
               return
             end
-            local path = vim.fn.fnameescape(node.absolute_path)
-            vim.cmd("tabnew " .. path)
-            api.tree.focus()
-          end, { buffer = bufnr, noremap = true, silent = true, desc = "Open file in new tab" })
+
+            local file_path = node.absolute_path
+            local found = false
+
+            -- Check if file is visible in any tab
+            for _, tabid in ipairs(vim.api.nvim_list_tabpages()) do
+              for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
+                local buf = vim.api.nvim_win_get_buf(winid)
+                if vim.api.nvim_buf_get_name(buf) == file_path then
+                  vim.notify("Switching to existing tab for: " .. file_path, vim.log.levels.INFO)
+                  vim.api.nvim_set_current_tabpage(tabid)
+                  vim.api.nvim_set_current_win(winid)
+                  found = true
+                  break
+                end
+              end
+              if found then break end
+            end
+
+            if not found then
+              vim.notify("Opening new tab for: " .. file_path, vim.log.levels.INFO)
+              vim.cmd("tabnew " .. file_path)
+              -- Update Tabby immediately if loaded
+              if pcall(require, "tabby") then
+                vim.cmd("redrawtabline")
+              end
+              vim.cmd("wincmd p") -- return focus to NvimTree
+            end
+          end, { buffer = bufnr, desc = "Open file in new tab or switch if already visible" })
+          -- ======
 
           vim.keymap.set("n", "<leader>f", function()
             api.tree.focus()

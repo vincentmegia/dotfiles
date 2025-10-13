@@ -8,15 +8,10 @@ function M.setup()
     config = function()
       local ok, tabby = pcall(require, "tabby")
       if not ok then
-        vim.notify("tabby.nvim not found", vim.log.levels.ERROR)
         return
       end
 
       local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
-      if not devicons_ok then
-        vim.notify("nvim-web-devicons not found", vim.log.levels.WARN)
-      end
-
       local theme = {
         fill = "TabLineFill",
         head = "TabLine",
@@ -35,10 +30,8 @@ function M.setup()
         if devicons_ok then
           local icon = devicons.get_icon(name, vim.fn.fnamemodify(name, ":e"), { default = true }) or ""
           local result = icon .. " " .. fname
-          vim.notify("filename_from_bufnr: " .. result, vim.log.levels.INFO)
           return result
         end
-        vim.notify("filename_from_bufnr (no icon): " .. fname, vim.log.levels.INFO)
         return fname
       end
 
@@ -51,12 +44,10 @@ function M.setup()
           if bufname ~= "" and not bufname:match("NvimTree") then
             local fname = filename_from_bufnr(buf)
             if fname then
-              vim.notify("tab_filename: tabid=" .. tabid .. " fname=" .. fname, vim.log.levels.INFO)
               return fname
             end
           end
         end
-        vim.notify("tab_filename: tabid=" .. tabid .. " => [No Name]", vim.log.levels.INFO)
         return "[No Name]"
       end
       -- Tabby line setup
@@ -68,7 +59,6 @@ function M.setup()
               local hl = tab.is_current() and theme.current_tab or theme.tab
               local tabid = tab.id or 0
               local fname = tab_filename(tabid)
-              vim.notify("Rendering tab: number=" .. tab.number() .. " fname=" .. fname, vim.log.levels.INFO)
               return { string.format(" %d: %s ", tab.number(), fname), hl = hl, margin = " " }
             end),
             line.spacer(),
@@ -82,7 +72,6 @@ function M.setup()
       -- Redraw when buffers/windows change
       vim.api.nvim_create_autocmd({ "BufWinEnter", "BufReadPost" }, {
         callback = function()
-          vim.notify("Redrawing Tabby tabline...", vim.log.levels.INFO)
           vim.cmd("redrawtabline")
         end,
       })

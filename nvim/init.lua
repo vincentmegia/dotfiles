@@ -43,4 +43,5 @@ lazy.setup({
   cmp.spec,
 })
 
-vim.notify("nvim setup", vim.log.levels.INFO)
+vim.cmd("colorscheme onedark")
+vim.g.have_nerd_font = true

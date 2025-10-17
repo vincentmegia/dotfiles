@@ -26,7 +26,39 @@ function M.setup()
         },
         renderer = {
           highlight_opened_files = "all",
-          icons = { show = { file = true, folder = true, git = true } },
+          root_folder_label = false,
+          icons = {
+            webdev_colors = true,
+            git_placement = "after",
+            show = {
+              file = true,
+              folder = true,
+              folder_arrow = true,
+              git = true,
+            },
+            glyphs = {
+              default = "",
+              symlink = "",
+              folder = {
+                arrow_closed = "",
+                arrow_open = "",
+                default = "",
+                open = "",
+                empty = "",
+                empty_open = "",
+                symlink = "",
+              },
+              git = {
+                unstaged = "✗",
+                staged = "✓",
+                unmerged = "",
+                renamed = "➜",
+                untracked = "★",
+                deleted = "",
+                ignored = "◌",
+              },
+            },
+          },
         },
         hijack_cursor = true,
         hijack_unnamed_buffer_when_opening = true,
@@ -34,12 +66,25 @@ function M.setup()
           local api = require("nvim-tree.api")
           pcall(vim.keymap.del, "n", "<CR>", { buffer = bufnr })
 
+          -- ✅ Set up all default mappings first
+          api.config.mappings.default_on_attach(bufnr)
+
           -- ======
           -- <CR>: open in new tab or jump if already open
           vim.keymap.set("n", "<CR>", function()
             local node = api.tree.get_node_under_cursor()
             if not node or not node.absolute_path then
               vim.notify("No node under cursor", vim.log.levels.WARN)
+              return
+            end
+
+            -- 🗂️ If directory → expand/collapse instead of opening
+            if node.type == "directory" then
+              if node.open then
+                api.node.open.edit()  -- collapse
+              else
+                api.node.open.edit()  -- expand
+              end
               return
             end
 

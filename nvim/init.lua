@@ -24,6 +24,7 @@ local nvimtree = require("plugins.nvim-tree")
 local tabby = require("plugins.tabby")
 local supermaven_ai = require("plugins.ai")
 local cmp = require("plugins.cmp")
+local comment = require("plugins.comment")
 
 -- Setup specs
 mason.setup()
@@ -33,6 +34,7 @@ tabby.setup()
 supermaven_ai.setup()
 cmp.setup()
 mason_lsp.setup()
+comment.setup()
 
 lazy.setup({
   mason.spec,
@@ -43,6 +45,7 @@ lazy.setup({
   tabby.spec,
   supermaven_ai.spec,
   cmp.spec,
+  comment.spec
 })
 
 vim.cmd("colorscheme onedark")

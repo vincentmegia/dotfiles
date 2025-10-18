@@ -12,7 +12,7 @@ function M.setup()
 
       supermaven.setup({
         keymaps = {
-          accept_suggestion = "<Tab>",
+          accept_suggestion = "<C-a>",
           clear_suggestion  = "<C-]>",
           accept_word       = "<C-j>",
         },

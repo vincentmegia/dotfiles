@@ -18,6 +18,7 @@ require("core.init")
 -- Lazy.nvim plugin setup
 local lazy = require("lazy")
 local mason = require("plugins.mason")
+local mason_lsp = require("plugins.mason-lsp")
 local telescope = require("plugins.telescope")
 local nvimtree = require("plugins.nvim-tree")
 local tabby = require("plugins.tabby")
@@ -31,10 +32,11 @@ nvimtree.setup()
 tabby.setup()
 supermaven_ai.setup()
 cmp.setup()
+mason_lsp.setup()
 
 lazy.setup({
-  mason.core,
-  mason.lsp,
+  mason.spec,
+  mason_lsp.spec,
   telescope.spec,
   telescope.fzf_native,
   nvimtree.spec,

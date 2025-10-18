@@ -47,3 +47,4 @@ lazy.setup({
 
 vim.cmd("colorscheme onedark")
 vim.g.have_nerd_font = true
+vim.opt.clipboard = "unnamedplus"

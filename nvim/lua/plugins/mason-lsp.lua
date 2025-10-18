@@ -20,7 +20,7 @@ function M.setup()
 
       mason.setup()
       mason_lsp.setup({
-        ensure_installed = { "lua_ls", "pyright", "ts_ls" }, -- note ts_ls (not tsserver)
+        ensure_installed = { "lua_ls", "pyright", "ts_ls", "cssls", "htmx", "yamlls", "html", "tailwindcss" }, -- note ts_ls (not tsserver)
         automatic_installation = true,
       })
 
@@ -76,15 +76,73 @@ function M.setup()
         capabilities = capabilities,
       })
 
+      -- 🟪 HTML
+      define_server("html", {
+        cmd = { "vscode-html-language-server", "--stdio" },
+        filetypes = { "html" },
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      -- 🟩 CSS
+      define_server("cssls", {
+        cmd = { "vscode-css-language-server", "--stdio" },
+        filetypes = { "css", "scss", "less" },
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      -- 🧵 YAML
+      define_server("yamlls", {
+        cmd = { "yaml-language-server", "--stdio" },
+        filetypes = { "yaml", "yml" },
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      -- 🌈 TailwindCSS
+      define_server("tailwindcss", {
+        cmd = { "tailwindcss-language-server", "--stdio" },
+        filetypes = { "html", "css", "javascriptreact", "typescriptreact", "svelte" },
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
+
+      -- 🔵 HTMX (optional — only if you installed via npm i -g htmx-lsp)
+      define_server("htmx", {
+        cmd = { "htmx-lsp", "--stdio" },
+        filetypes = { "html", "htmx" },
+        on_attach = on_attach,
+        capabilities = capabilities,
+      })
       --------------------------------------------------------------------
       -- ✅ Start all installed servers automatically
       --------------------------------------------------------------------
       for _, server_name in ipairs(mason_lsp.get_installed_servers()) do
         local cfg = lspconfig[server_name]
+
+        -- 🧩 Default config for servers we didn’t define manually
+        if not cfg then
+          lspconfig[server_name] = {
+            default_config = {
+              cmd = { server_name },
+              filetypes = {},
+              root_dir = vim.fn.getcwd(),
+              on_attach = on_attach,
+              capabilities = capabilities,
+            },
+          }
+          cfg = lspconfig[server_name]
+        end
+
+        -- ✅ Start the server
         if cfg and cfg.default_config then
-          vim.lsp.start(cfg.default_config)
-        else
-          vim.notify("[mason-lsp] no config for " .. server_name, vim.log.levels.WARN)
+          local ok, err = pcall(function()
+            vim.lsp.start(cfg.default_config)
+          end)
+          if not ok then
+            vim.notify("[mason-lsp] failed to start " .. server_name .. ": " .. err, vim.log.levels.ERROR)
+          end
         end
       end
     end,

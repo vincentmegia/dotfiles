@@ -1,6 +1,12 @@
 set fish_greeting ""
+set -gx PATH /opt/homebrew/opt/ruby/bin $PATH
+set -Ux NVIM_PYTHON3_HOME ~/.config/nvim/venv/bin/python
 
-set -gx TERM "screen-256color"
+# set -gx TERM "screen-256color"
+# Only set TERM when not inside tmux
+if test -z "$TMUX"
+    set -gx TERM xterm-256color
+end
 
 # theme
 set -g theme_color_scheme terminal-dark
@@ -32,8 +38,8 @@ set -g GOBIN $GOPATH/bin
 set -gx PATH $GOPATH/bin $PATH
 
 # Java
-#set -g JAVA_HOME /opt/homebrew/opt/openjdk@21
-set -g JAVA_HOME /opt/homebrew/opt/openjdk@17
+set -g JAVA_HOME /opt/homebrew/opt/openjdk@23
+#set -g JAVA_HOME /opt/homebrew/opt/openjdk@17
 set -gx PATH $JAVA_HOME/bin $PATH
 
 

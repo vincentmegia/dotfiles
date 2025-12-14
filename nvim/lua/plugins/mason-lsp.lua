@@ -9,7 +9,7 @@ function M.setup()
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      --
+      local format_group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true })
       local mason = require("mason")
       local mason_lsp = require("mason-lspconfig")
       local lspconfig = require("lspconfig")
@@ -31,8 +31,20 @@ function M.setup()
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
       local on_attach = function(client, bufnr)
+        -- keymaps
+        local opts = { buffer = bufnr, silent = true }
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+
         -- ✅ FORMAT ON SAVE
         if client.server_capabilities.documentFormattingProvider then
+          vim.api.nvim_clear_autocmds({
+            group = format_group,
+            buffer = bufnr,
+          })
+
           vim.api.nvim_create_autocmd("BufWritePre", {
             buffer = bufnr,
             callback = function()
@@ -47,7 +59,7 @@ function M.setup()
 
       -- ✅ Go
       lspconfig.gopls.setup({
-          capabilities = capabilities,
+        capabilities = capabilities,
         on_attach = on_attach,
         settings = {
           gopls = {

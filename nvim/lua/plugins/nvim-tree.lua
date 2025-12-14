@@ -62,6 +62,10 @@ function M.setup()
         },
         hijack_cursor = true,
         hijack_unnamed_buffer_when_opening = true,
+        filters = {
+          dotfiles = false,
+          custom = {},
+        },
         on_attach = function(bufnr)
           local api = require("nvim-tree.api")
           pcall(vim.keymap.del, "n", "<CR>", { buffer = bufnr })

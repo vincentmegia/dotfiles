@@ -1,5 +1,16 @@
 -- Bootstrap Lazy.nvim (plugin manager)
 --
+local orig_deprecate = vim.deprecate
+
+vim.deprecate = function(name, alternative, version, plugin)
+  -- Ignore only the lspconfig framework warning
+  if name:find("lspconfig", 1, true) then
+    return
+  end
+
+  orig_deprecate(name, alternative, version, plugin)
+end
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -54,3 +65,5 @@ vim.g.have_nerd_font = true
 vim.opt.clipboard = "unnamedplus"
 vim.g.python3_host_prog = "/Users/vincem/.config/nvim/venv/bin/python"-- For init.lua
 vim.g.loaded_perl_provider = 0
+
+

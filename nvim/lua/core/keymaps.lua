@@ -80,3 +80,8 @@ vim.keymap.set('i', '<C-h>', '<Left>', { desc = 'Move left in insert mode' })
 vim.keymap.set('i', '<C-l>', '<Right>', { desc = 'Move right in insert mode' })
 vim.keymap.set('i', '<C-j>', '<Down>', { desc = 'Move down in insert mode' })
 vim.keymap.set('i', '<C-k>', '<Up>', { desc = 'Move up in insert mode' })
+
+-- go
+vim.keymap.set("n", "<leader>gr", function()
+  require("go.run").go_run()
+end, { desc = "Go Run (reuse terminal)" })

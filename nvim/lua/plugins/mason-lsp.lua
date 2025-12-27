@@ -16,7 +16,6 @@ function M.setup()
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
       mason.setup()
-
       mason_lsp.setup({
         ensure_installed = {
           "gopls",

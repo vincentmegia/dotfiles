@@ -7,7 +7,7 @@ local opts = { noremap = true, silent = true }
 -- Leader keys
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-keymaps
+
 -----------------------------------------------------------
 -- 💾 General / Quality of Life
 -----------------------------------------------------------

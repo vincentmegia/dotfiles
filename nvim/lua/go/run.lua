@@ -29,11 +29,14 @@ function M.go_run()
   -- Send command to terminal
   local job_id = vim.b.terminal_job_id
   if job_id then
---    vim.fn.chansend(job_id, "\003") -- Ctrl+C
+    --vim.fn.chansend(job_id, "\003") -- Ctrl+C
     vim.fn.chansend(job_id, "clear\n")
     local file = vim.fn.expand("%")
     vim.fn.chansend(job_id, "go run .\n")
- --    vim.fn.chansend(job_id, "go run " .. file .. "\n")
+    vim.fn.chansend(job_id, "go run cmd/api/main.go \n")
+    -- 🔑 THIS IS THE KEY
+    vim.cmd("startinsert")
+    --    vim.fn.chansend(job_id, "go run " .. file .. "\n")
   else
     vim.notify("Go terminal not ready", vim.log.levels.ERROR)
   end

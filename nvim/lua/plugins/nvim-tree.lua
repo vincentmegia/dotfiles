@@ -18,7 +18,9 @@ function M.setup()
 
       -- === NvimTree Setup ===
       tree.setup({
-        update_focused_file = { enable = true, update_root = true },
+        sync_root_with_cwd = true,
+        respect_buf_cwd = false,
+        update_focused_file = { enable = true, update_root = false },
         view = {
           width = 35,
           side = "left",

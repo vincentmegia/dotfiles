@@ -1,0 +1,3 @@
+1 add better unit test runner
+  - remove nvim-treesitter
+  - remove ray-x

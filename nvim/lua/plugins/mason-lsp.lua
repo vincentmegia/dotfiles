@@ -16,7 +16,8 @@ function M.setup()
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
       mason.setup()
-      mason_lsp.setup({
+      -- when enabled it loads two instances of gopls
+      --[[ mason_lsp.setup({
         ensure_installed = {
           "gopls",
           "lua_ls",
@@ -25,7 +26,7 @@ function M.setup()
           "cssls",
           "yamlls",
         },
-      })
+      }) ]]
 
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
@@ -55,6 +56,7 @@ function M.setup()
           })
         end
       end
+
 
       -- ✅ Go
       lspconfig.gopls.setup({

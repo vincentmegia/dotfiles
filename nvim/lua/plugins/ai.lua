@@ -14,7 +14,7 @@ function M.setup()
         keymaps = {
           accept_suggestion = "<C-a>",
           clear_suggestion  = "<C-]>",
-          accept_word       = "<C-l>",
+          accept_word       = "<C-ll>",
         },
         ignore_filetypes = { "cpp" },
         color = {

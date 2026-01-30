@@ -1,7 +1,7 @@
 -- ~/.config/nvim/lua/core/keymaps.lua
 -- Centralized keymaps for Neovim
 
-local map = vim.keymap.set
+local map = vim.keymap.set -- vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
 -- Leader keys
@@ -41,9 +41,9 @@ end, { desc = "Focus Current Buffer in NvimTree" })
 -- 🔍 Telescope
 -----------------------------------------------------------
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find Files" })
-map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>",  { desc = "Live Grep" })
-map("n", "<leader>fb", "<cmd>Telescope buffers<cr>",    { desc = "List Buffers" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>",  { desc = "Help Tags" })
+map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "Live Grep" })
+map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "List Buffers" })
+map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help Tags" })
 map("n", "<leader>fs", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Document Symbols" })
 map("n", "<leader>fw", "<cmd>Telescope lsp_workspace_symbols<cr>", { desc = "Workspace Symbols" })
 
@@ -65,23 +65,36 @@ vim.api.nvim_create_autocmd("LspAttach", {
     bufmap("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
     bufmap("n", "[d", vim.diagnostic.goto_prev, "Previous Diagnostic")
     bufmap("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
+    bufmap("n", "<leader>de", vim.diagnostic.open_float, "Show diagnostic")
   end,
 })
 
 
 -----------------------------------------------------------
--- 🧠 Lazy 
+-- 🧠 Lazy
 -----------------------------------------------------------
 map("n", "<leader>ls", "<cmd>Lazy sync<cr>", { desc = "Lazy Sync" })
 
 
 -- Move cursor in insert mode using Ctrl + keys
-vim.keymap.set('i', '<C-h>', '<Left>', { desc = 'Move left in insert mode' })
-vim.keymap.set('i', '<C-l>', '<Right>', { desc = 'Move right in insert mode' })
-vim.keymap.set('i', '<C-j>', '<Down>', { desc = 'Move down in insert mode' })
-vim.keymap.set('i', '<C-k>', '<Up>', { desc = 'Move up in insert mode' })
+map('i', '<C-h>', '<Left>', { desc = 'Move left in insert mode' })
+map('i', '<C-l>', '<Right>', { desc = 'Move right in insert mode' })
+map('i', '<C-j>', '<Down>', { desc = 'Move down in insert mode' })
+map('i', '<C-k>', '<Up>', { desc = 'Move up in insert mode' })
 
 -- go
-vim.keymap.set("n", "<leader>gr", function()
+map("n", "<leader>gr", function()
+  -- runs /lua/go/run.lua
   require("go.run").go_run()
 end, { desc = "Go Run (reuse terminal)" })
+
+-- Go test
+map("n", "<leader>tf", ":GoTestFunc<CR>", { desc = "Go test function", silent = true })
+map("n", "<leader>tt", ":GoTestPkg<CR>", { desc = "Go test package", silent = true })
+map("n", "<leader>ta", ":GoTest<CR>", { desc = "Go test all", silent = true })
+
+-- Go Build
+map("n", "<leader>grb", function()
+  -- runs /lua/go/build.lua
+  require("go.build").go_build()
+end, { desc = "Go Run build(reuse terminal)" })

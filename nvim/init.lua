@@ -37,6 +37,7 @@ local tabby = require("plugins.tabby")
 local supermaven_ai = require("plugins.ai")
 local cmp = require("plugins.cmp")
 local comment = require("plugins.comment")
+local notify = require("plugins.notify")
 
 -- Setup specs
 mason.setup()
@@ -47,6 +48,7 @@ supermaven_ai.setup()
 cmp.setup()
 mason_lsp.setup()
 comment.setup()
+notify.setup()
 
 lazy.setup({
   mason.spec,
@@ -57,7 +59,8 @@ lazy.setup({
   tabby.spec,
   supermaven_ai.spec,
   cmp.spec,
-  comment.spec
+  comment.spec,
+  notify.spec,
 })
 
 vim.cmd("colorscheme onedark")
@@ -65,5 +68,3 @@ vim.g.have_nerd_font = true
 vim.opt.clipboard = "unnamedplus"
 vim.g.python3_host_prog = "/Users/vincem/.config/nvim/venv/bin/python"-- For init.lua
 vim.g.loaded_perl_provider = 0
-
-

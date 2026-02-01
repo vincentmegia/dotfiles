@@ -7,7 +7,7 @@ function M.setup()
     config = function()
       local ok, notify = pcall(require, "notify")
       if not ok then return end
-      vim.notify = notify  -- override default handler
+      vim.notify = notify -- override default handler
       notify.setup({
         stages = "fade",
         timeout = 3000,

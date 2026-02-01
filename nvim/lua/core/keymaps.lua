@@ -18,6 +18,7 @@ map({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system clipboard" })
 map("n", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
 map("n", "<leader>Q", "<cmd>wa | qa<CR>", { desc = "Save All and Quit" })
 map("n", "<leader>wQ", "<cmd>wa | qa<CR>", { desc = "Save All and Quit" })
+-- TABS
 -- Next tab
 map("n", "<leader>]", ":tabnext<CR>", { desc = "Next Tab" })
 -- Previous tab

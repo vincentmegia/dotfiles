@@ -110,6 +110,7 @@ function M.setup()
               return client.name == "eslint"
             end,
             timeout_ms = 5000,
+            async = false,
           })
         end,
       })

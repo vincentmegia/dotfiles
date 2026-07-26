@@ -25,6 +25,8 @@ function M.setup()
           "yamlls",
           "jsonls",
           "rust_analyzer",
+          "ts_ls",
+          "eslint",
         },
       })
 
@@ -120,6 +122,48 @@ function M.setup()
             },
           },
         },
+      })
+
+      -- JS/TS - use eslint for formatting
+      local js_ts_format_group = vim.api.nvim_create_augroup("JsTsFormatOnSave", { clear = true })
+
+      local on_attach_js_ts = function(client, bufnr)
+        local opts = { buffer = bufnr, silent = true }
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          group = js_ts_format_group,
+          buffer = bufnr,
+          callback = function()
+            vim.lsp.buf.format({
+              bufnr = bufnr,
+              async = false,
+              timeout_ms = 5000,
+            })
+          end,
+        })
+      end
+
+      lspconfig.ts_ls.setup({
+        capabilities = capabilities,
+        on_attach = on_attach_js_ts,
+        init_options = {
+          preferences = {
+            includeAutomaticOptionalCommitCompletions = true,
+          },
+        },
+      })
+
+      lspconfig.eslint.setup({
+        capabilities = capabilities,
+        on_attach = on_attach_js_ts,
+        root_dir = function()
+          return vim.loop.cwd() or vim.fn.getcwd()
+        end,
+        filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
       })
 
       -- Rust format on save (rustfmt directly)

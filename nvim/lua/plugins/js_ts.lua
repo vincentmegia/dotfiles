@@ -98,6 +98,22 @@ function M.setup()
         end, { buffer = bufnr, desc = "Toggle Inlay Hints" })
       end
 
+      -- Format JS/TS with eslint on save
+      local eslint_format_group = vim.api.nvim_create_augroup("EslintFormatOnSave", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+        group = eslint_format_group,
+        pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.mjs", "*.cjs", "*.mts", "*.cts" },
+        callback = function(opts)
+          vim.lsp.buf.format({
+            bufnr = opts.buf,
+            filter = function(client)
+              return client.name == "eslint"
+            end,
+            timeout_ms = 5000,
+          })
+        end,
+      })
+
       -- LSP servers
       local servers = { "tsserver", "eslint" }
       for _, server in ipairs(servers) do

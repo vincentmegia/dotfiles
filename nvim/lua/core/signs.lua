@@ -4,7 +4,9 @@ local M = {}
 -- ==============================
 -- 1. LSP Diagnostic Icons (Gutter)
 -- ==============================
--- Define icons
+local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
+
+-- Diagnostic icons (from nerd font)
 local diag_icons = {
   Error = "",
   Warn  = "",
@@ -12,19 +14,45 @@ local diag_icons = {
   Hint  = "",
 }
 
--- Define signs silently to avoid the deprecation warning
-for type, icon in pairs(diag_icons) do
-  local hl = "DiagnosticSign" .. type
-  vim.cmd(string.format("silent! sign define %s text=%s texthl=%s numhl=", hl, icon, hl))
+-- Use nvim-web-devicons diagnostic icons if available
+if devicons_ok then
+  local icons = devicons.icons
+  if icons.diagnostics then
+    if icons.diagnostics.Error then
+      diag_icons.Error = icons.diagnostics.Error.glyph or diag_icons.Error
+    end
+    if icons.diagnostics.Warn then
+      diag_icons.Warn = icons.diagnostics.Warn.glyph or diag_icons.Warn
+    end
+    if icons.diagnostics.Hint then
+      diag_icons.Hint = icons.diagnostics.Hint.glyph or diag_icons.Hint
+    end
+    if icons.diagnostics.Info then
+      diag_icons.Info = icons.diagnostics.Info.glyph or diag_icons.Info
+    end
+  end
 end
 
--- Configure diagnostics globally
+-- Define signs with proper Neovim 0.12 API (text must be a string)
+vim.fn.sign_define("DiagnosticSignError", { text = diag_icons.Error, hl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn",  { text = diag_icons.Warn,  hl = "DiagnosticSignWarn"  })
+vim.fn.sign_define("DiagnosticSignInfo",  { text = diag_icons.Info,  hl = "DiagnosticSignInfo"  })
+vim.fn.sign_define("DiagnosticSignHint",  { text = diag_icons.Hint,  hl = "DiagnosticSignHint"  })
+
+-- Configure diagnostics: icons in left gutter + virtual text inlay (no icons)
 vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = diag_icons.Error,
+      [vim.diagnostic.severity.WARN] = diag_icons.Warn,
+      [vim.diagnostic.severity.INFO] = diag_icons.Info,
+      [vim.diagnostic.severity.HINT] = diag_icons.Hint,
+    },
+  },
   virtual_text = {
-    prefix = "●", -- small dot
+    prefix = "",
     spacing = 2,
   },
-  signs = true, -- show gutter icons
   underline = true,
   severity_sort = false,
   update_in_insert = false,
@@ -36,7 +64,6 @@ vim.diagnostic.config({
     prefix = "● ",
     max_width = 80,
     format = function(d)
-      -- Show code or source neatly
       local code = d.code or d.source or "?"
       return string.format("[%s] %s", code, d.message)
     end,

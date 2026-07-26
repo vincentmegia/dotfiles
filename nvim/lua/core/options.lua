@@ -12,5 +12,5 @@ vim.o.fillchars = "eob: "  -- sets the end-of-buffer character to blank
 vim.o.cursorline = true
 
 -- Always show sign column (for LSP/GitSigns)
-vim.o.signcolumn = "yes"
+vim.o.signcolumn = "yes:2"
 vim.o.showtabline = 2

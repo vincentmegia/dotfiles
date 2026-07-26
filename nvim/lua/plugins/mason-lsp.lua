@@ -10,14 +10,11 @@ function M.setup()
     },
     config = function()
       local format_group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true })
-      local mason = require("mason")
       local mason_lsp = require("mason-lspconfig")
       local lspconfig = require("lspconfig")
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-      mason.setup()
-      -- when enabled it loads two instances of gopls
-      --[[ mason_lsp.setup({
+      mason_lsp.setup({
         ensure_installed = {
           "gopls",
           "lua_ls",
@@ -25,8 +22,9 @@ function M.setup()
           "html",
           "cssls",
           "yamlls",
+          "rust_analyzer",
         },
-      }) ]]
+      })
 
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
@@ -86,6 +84,22 @@ function M.setup()
       lspconfig.pyright.setup({
         capabilities = capabilities,
         on_attach = on_attach,
+      })
+
+      -- Rust
+      lspconfig.rust_analyzer.setup({
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = {
+          ["rust-analyzer"] = {
+            rustfmt = {
+              allFeatures = true,
+            },
+            cargo = {
+              allFeatures = true,
+            },
+          },
+        },
       })
     end,
   }

@@ -14,6 +14,16 @@ function M.setup()
         float = { size = { width = 80, height = 15 } },
       },
       messages = { view = "split" },
+      lsp = {
+        progress = {
+          enabled = true,
+        },
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          ["cmp.entry.get_documentation"] = true,
+        },
+      },
       presets = {
         bottom_search = true,
         command_palette = true,

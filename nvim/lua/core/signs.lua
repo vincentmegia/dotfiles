@@ -52,6 +52,7 @@ vim.diagnostic.config({
   virtual_text = {
     prefix = "",
     spacing = 2,
+    wrap = true,
   },
   underline = true,
   severity_sort = false,

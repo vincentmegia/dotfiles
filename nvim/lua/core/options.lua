@@ -14,3 +14,5 @@ vim.o.cursorline = true
 -- Always show sign column (for LSP/GitSigns)
 vim.o.signcolumn = "yes:2"
 vim.o.showtabline = 2
+-- Wrap long lines
+vim.o.wrap = true

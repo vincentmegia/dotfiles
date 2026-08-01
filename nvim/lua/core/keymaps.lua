@@ -99,3 +99,10 @@ map("n", "<leader>grb", function()
   -- runs /lua/go/build.lua
   require("go.build").go_build()
 end, { desc = "Go Run build(reuse terminal)" })
+
+-----------------------------------------------------------
+-- 🩺 Diagnostics
+-----------------------------------------------------------
+map("n", "<leader>dd", "<cmd>TinyInlineDiag toggle<cr>", { desc = "Toggle Diagnostics" })
+map("n", "<leader>dc", "<cmd>TinyInlineDiag toggle_cursor_only<cr>", { desc = "Toggle Cursor-only Diagnostics" })
+map("n", "<leader>dr", "<cmd>TinyInlineDiag reset<cr>", { desc = "Reset Diagnostics" })

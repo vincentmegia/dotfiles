@@ -39,6 +39,7 @@ local cmp = require("plugins.cmp")
 local comment = require("plugins.comment")
 local notify = require("plugins.notify")
 local noice = require("plugins.noice")
+local tiny_diag = require("plugins.tiny-inline-diagnostic")
 
 -- Setup specs
 mason.setup()
@@ -51,6 +52,7 @@ mason_lsp.setup()
 comment.setup()
 notify.setup()
 noice.setup()
+tiny_diag.setup()
 
 lazy.setup({
   mason.spec,
@@ -64,6 +66,7 @@ lazy.setup({
   comment.spec,
   notify.spec,
   noice.spec,
+  tiny_diag.spec,
 })
 
 vim.cmd("colorscheme onedark")

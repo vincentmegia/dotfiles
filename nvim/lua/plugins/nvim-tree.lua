@@ -102,7 +102,7 @@ function M.setup()
               for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
                 local buf = vim.api.nvim_win_get_buf(winid)
                 if vim.api.nvim_buf_get_name(buf) == file_path then
-                  vim.notify("Switching to existing tab for: " .. file_path, vim.log.levels.INFO)
+  
                   vim.api.nvim_set_current_tabpage(tabid)
                   vim.api.nvim_set_current_win(winid)
                   found = true
@@ -113,7 +113,7 @@ function M.setup()
             end
 
             if not found then
-              vim.notify("Opening new tab for: " .. file_path, vim.log.levels.INFO)
+
               vim.cmd("tabnew " .. file_path)
               -- Update Tabby immediately if loaded
               if pcall(require, "tabby") then

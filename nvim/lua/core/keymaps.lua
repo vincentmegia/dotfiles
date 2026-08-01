@@ -106,3 +106,24 @@ end, { desc = "Go Run build(reuse terminal)" })
 map("n", "<leader>dd", "<cmd>TinyInlineDiag toggle<cr>", { desc = "Toggle Diagnostics" })
 map("n", "<leader>dc", "<cmd>TinyInlineDiag toggle_cursor_only<cr>", { desc = "Toggle Cursor-only Diagnostics" })
 map("n", "<leader>dr", "<cmd>TinyInlineDiag reset<cr>", { desc = "Reset Diagnostics" })
+
+-----------------------------------------------------------
+-- 🖥️ Terminal command → new buffer
+-----------------------------------------------------------
+map("n", "<leader>sh", function()
+  vim.ui.input({ prompt = "Shell command: " }, function(cmd)
+    if not cmd or cmd == "" then return end
+    local handle = io.popen(cmd .. " 2>&1")
+    if not handle then
+      vim.notify("Failed to run command", vim.log.levels.ERROR)
+      return
+    end
+    local output = handle:read("*a")
+    handle:close()
+    vim.cmd("new")
+    vim.api.nvim_set_current_buf(0)
+    vim.cmd("setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile")
+    local buf = vim.api.nvim_get_current_buf()
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(output, "\n", { plain = true }))
+  end)
+end, { desc = "Run command in new buffer" })

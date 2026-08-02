@@ -113,17 +113,49 @@ map("n", "<leader>dr", "<cmd>TinyInlineDiag reset<cr>", { desc = "Reset Diagnost
 map("n", "<leader>sh", function()
   vim.ui.input({ prompt = "Shell command: " }, function(cmd)
     if not cmd or cmd == "" then return end
-    local handle = io.popen(cmd .. " 2>&1")
-    if not handle then
-      vim.notify("Failed to run command", vim.log.levels.ERROR)
-      return
-    end
-    local output = handle:read("*a")
-    handle:close()
     vim.cmd("new")
-    vim.api.nvim_set_current_buf(0)
-    vim.cmd("setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile")
+    vim.cmd("setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nonumber norelativenumber")
     local buf = vim.api.nvim_get_current_buf()
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(output, "\n", { plain = true }))
+    vim.api.nvim_buf_set_option(buf, "filetype", "terminal")
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "$ " .. cmd, "" })
+    vim.api.nvim_buf_set_option(buf, "modifiable", true)
+    vim.cmd("normal! G")
+    vim.api.nvim_buf_set_option(buf, "modifiable", false)
+    vim.cmd("startinsert")
+    local ctx = { buf = buf, cmd = cmd }
+    vim.system({ "sh", "-c", cmd .. " 2>&1" }, {
+      text = true,
+      stdout = function(err, chunk)
+        if err or not chunk then return end
+        vim.schedule(function()
+          vim.api.nvim_buf_set_option(ctx.buf, "modifiable", true)
+          local lines = vim.split(chunk, "\n", { plain = true })
+          -- Remove trailing empty string from split if chunk ends with newline
+          if #lines > 0 and lines[#lines] == "" and chunk:sub(-1) == "\n" then
+            lines[#lines] = nil
+          end
+          if #lines > 0 then
+            local start_line = vim.api.nvim_buf_line_count(ctx.buf)
+            vim.api.nvim_buf_set_lines(ctx.buf, start_line, -1, false, lines)
+          end
+          vim.api.nvim_buf_set_option(ctx.buf, "modifiable", false)
+          local line_count = vim.api.nvim_buf_line_count(ctx.buf)
+          vim.api.nvim_win_set_cursor(0, { line_count, 0 })
+        end)
+      end,
+      on_exit = function(result)
+        vim.schedule(function()
+          if result.code ~= 0 then
+            vim.notify("Command exited with code " .. result.code, vim.log.levels.WARN)
+          end
+          vim.api.nvim_buf_set_option(ctx.buf, "modifiable", true)
+          local start_line = vim.api.nvim_buf_line_count(ctx.buf)
+          vim.api.nvim_buf_set_lines(ctx.buf, start_line, -1, false, { "", "[Done]" })
+          vim.api.nvim_buf_set_option(ctx.buf, "modifiable", false)
+          local line_count = vim.api.nvim_buf_line_count(ctx.buf)
+          vim.api.nvim_win_set_cursor(0, { line_count, 0 })
+        end)
+      end,
+    })
   end)
 end, { desc = "Run command in new buffer" })

@@ -70,58 +70,50 @@ function M.setup()
         },
         on_attach = function(bufnr)
           local api = require("nvim-tree.api")
-          pcall(vim.keymap.del, "n", "<CR>", { buffer = bufnr })
 
           -- ✅ Set up all default mappings first
           api.config.mappings.default_on_attach(bufnr)
 
           -- ======
-          -- <CR>: open in new tab or jump if already open
-          vim.keymap.set("n", "<CR>", function()
+          -- <CR> / <C-t>: open a node's file in a new tab, or switch to the
+          -- tab that already has it open. The default <C-t> mapping
+          -- (api.node.open.tab) always opens a new tab with no such check,
+          -- which is how the same file used to end up open in multiple tabs.
+          local function open_or_switch_tab()
             local node = api.tree.get_node_under_cursor()
             if not node or not node.absolute_path then
               vim.notify("No node under cursor", vim.log.levels.WARN)
               return
             end
 
-            -- 🗂️ If directory → expand/collapse instead of opening
+            -- directory → expand/collapse instead of opening
             if node.type == "directory" then
-              if node.open then
-                api.node.open.edit()  -- collapse
-              else
-                api.node.open.edit()  -- expand
-              end
+              api.node.open.edit()
               return
             end
 
             local file_path = node.absolute_path
-            local found = false
 
-            -- Check if file is visible in any tab
             for _, tabid in ipairs(vim.api.nvim_list_tabpages()) do
               for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
                 local buf = vim.api.nvim_win_get_buf(winid)
                 if vim.api.nvim_buf_get_name(buf) == file_path then
-  
                   vim.api.nvim_set_current_tabpage(tabid)
                   vim.api.nvim_set_current_win(winid)
-                  found = true
-                  break
+                  return
                 end
               end
-              if found then break end
             end
 
-            if not found then
-
-              vim.cmd("tabnew " .. file_path)
-              -- Update Tabby immediately if loaded
-              if pcall(require, "tabby") then
-                vim.cmd("redrawtabline")
-              end
-              vim.cmd("wincmd p") -- return focus to NvimTree
+            vim.cmd("tabnew " .. vim.fn.fnameescape(file_path))
+            if pcall(require, "tabby") then
+              vim.cmd("redrawtabline")
             end
-          end, { buffer = bufnr, desc = "Open file in new tab or switch if already visible" })
+            vim.cmd("wincmd p") -- return focus to NvimTree
+          end
+
+          vim.keymap.set("n", "<CR>", open_or_switch_tab, { buffer = bufnr, desc = "Open file in new tab or switch if already open" })
+          vim.keymap.set("n", "<C-t>", open_or_switch_tab, { buffer = bufnr, desc = "Open file in new tab or switch if already open" })
           -- ======
 
           vim.keymap.set("n", "<leader>f", function()

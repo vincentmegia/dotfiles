@@ -22,6 +22,34 @@ function M.setup()
     config = function()
       local telescope = require("telescope")
       local actions = require("telescope.actions")
+      local action_state = require("telescope.actions.state")
+
+      -- ======
+      -- Selecting a file that's already open in another tab should focus
+      -- that tab instead of loading a second copy into the current window
+      -- (matches the dedup behavior nvim-tree's <CR>/<C-t> already use).
+      local function open_or_switch_tab(prompt_bufnr)
+        local entry = action_state.get_selected_entry()
+        if not entry then
+          return
+        end
+        local file_path = vim.fn.fnamemodify(entry.path or entry[1], ":p")
+        actions.close(prompt_bufnr)
+
+        for _, tabid in ipairs(vim.api.nvim_list_tabpages()) do
+          for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(tabid)) do
+            local buf = vim.api.nvim_win_get_buf(winid)
+            if vim.api.nvim_buf_get_name(buf) == file_path then
+              vim.api.nvim_set_current_tabpage(tabid)
+              vim.api.nvim_set_current_win(winid)
+              return
+            end
+          end
+        end
+
+        vim.cmd("tabnew " .. vim.fn.fnameescape(file_path))
+      end
+      -- ======
 
       telescope.setup({
         defaults = {
@@ -50,7 +78,15 @@ function M.setup()
           },
         },
         pickers = {
-          find_files = { theme = "dropdown", hidden = true },
+          find_files = {
+            theme = "dropdown",
+            hidden = true,
+            attach_mappings = function(prompt_bufnr, map)
+              map("i", "<CR>", open_or_switch_tab)
+              map("n", "<CR>", open_or_switch_tab)
+              return true
+            end,
+          },
         },
         extensions = {
           fzf = {

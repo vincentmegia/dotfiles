@@ -28,6 +28,11 @@ function M.setup()
           "ts_ls",
           "eslint",
         },
+        -- Servers configured below with lspconfig.<name>.setup() must not also be
+        -- auto-enabled, otherwise each one attaches twice (e.g. two gopls clients).
+        automatic_enable = {
+          exclude = { "gopls", "lua_ls", "pyright", "rust_analyzer", "jsonls", "ts_ls", "eslint" },
+        },
       })
 
       require("mason").setup({

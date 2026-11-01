@@ -40,19 +40,21 @@ local comment = require("plugins.comment")
 local notify = require("plugins.notify")
 local noice = require("plugins.noice")
 local tiny_diag = require("plugins.tiny-inline-diagnostic")
+local autopairs = require("plugins.autopairs")
 
 -- Setup specs
 mason.setup()
 telescope.setup()
 nvimtree.setup()
 tabby.setup()
-supermaven_ai.setup()
+--supermaven_ai.setup()
 cmp.setup()
 mason_lsp.setup()
 comment.setup()
 notify.setup()
 noice.setup()
 tiny_diag.setup()
+autopairs.setup()
 
 lazy.setup({
   mason.spec,
@@ -61,12 +63,13 @@ lazy.setup({
   telescope.fzf_native,
   nvimtree.spec,
   tabby.spec,
-  supermaven_ai.spec,
+  --supermaven_ai.spec, -- disabled: setup() is commented out, so spec is nil (a nil here drops all specs after it)
   cmp.spec,
   comment.spec,
   notify.spec,
   noice.spec,
   tiny_diag.spec,
+  autopairs.spec,
 })
 
 vim.cmd("colorscheme onedark")

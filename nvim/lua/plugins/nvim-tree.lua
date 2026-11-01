@@ -67,6 +67,7 @@ function M.setup()
         filters = {
           dotfiles = false,
           custom = {},
+          exclude = { "%.env" }, -- always show .env* files even if git-ignored
         },
         on_attach = function(bufnr)
           local api = require("nvim-tree.api")

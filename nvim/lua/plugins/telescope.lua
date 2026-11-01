@@ -48,6 +48,17 @@ function M.setup()
         end
 
         vim.cmd("tabnew " .. vim.fn.fnameescape(file_path))
+
+        -- Ensure focus is on the file buffer, not NvimTree
+        local file_win = vim.api.nvim_get_current_win()
+        for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          local buf = vim.api.nvim_win_get_buf(winid)
+          if vim.api.nvim_buf_get_name(buf) == file_path then
+            file_win = winid
+            break
+          end
+        end
+        vim.api.nvim_set_current_win(file_win)
       end
       -- ======
 

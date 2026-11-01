@@ -12,7 +12,6 @@ vim.g.maplocalleader = " "
 -- 💾 General / Quality of Life
 -----------------------------------------------------------
 map("n", "<leader>w", "<cmd>w<cr>", { desc = "Save File" })
-map("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 map("n", "<leader>h", "<cmd>nohlsearch<cr>", { desc = "Clear Highlights" })
 map({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system clipboard" })
 map("n", "<leader>p", '"+p', { desc = "Paste from system clipboard" })
@@ -37,6 +36,23 @@ map("n", "<leader>f", function()
   api.tree.focus()
   api.tree.find_file(file)
 end, { desc = "Focus Current Buffer in NvimTree" })
+
+-- Close current buffer and NvimTree together
+map("n", "<leader>x", function()
+  -- If focused on NvimTree, move to the file window first
+  if vim.bo.filetype == "NvimTree" then
+    vim.cmd("wincmd l")
+  end
+
+  -- Close NvimTree if visible
+  local ok, view = pcall(require, "nvim-tree.view")
+  if ok and view.is_visible() then
+    require("nvim-tree.api").tree.close()
+  end
+
+  -- Close the current buffer
+  vim.cmd("bdelete")
+end, { desc = "Close buffer and NvimTree" })
 
 -----------------------------------------------------------
 -- 🔍 Telescope

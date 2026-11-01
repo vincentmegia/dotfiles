@@ -70,11 +70,10 @@ Diagnostic sign/virtual-text config is split across `core/signs.lua` (sign defin
 
 `colors/onedark.lua` is a full custom colorscheme (loaded via `:colorscheme onedark` in `init.lua`), not a plugin-provided one — edit it directly to change colors rather than looking for a theme plugin.
 
-Features: are stored in doc/features and in sequence <feature-name-<number>.md>, the number portion
-would be the order of the feature list that can help tracking the state of the features.
+### Feature and Bug-fix Documentation
 
-Bug-fix: are stored in doc/bugfix and in sequence <bugfix-name-<number>.md>, the number portion
-would be the order of the feature list that can help tracking the state of the features.
+- **Features:** `doc/features/<feature-name>-<number>.md` — the number suffix tracks order/state.
+- **Bug fixes:** `doc/bugfix/<bugfix-name>-<number>.md` — same numbering convention.
 
 
 ## Important Working Rules
@@ -86,9 +85,8 @@ Before making changes:
 3. Prefer the smallest change that satisfies the task.
 4. Do not introduce new dependencies unless necessary.
 5. Do not perform unrelated refactoring.
-6. Update tests when behavior changes.
-7. Run the relevant validation commands after making changes.
-8. Review the final diff for unintended changes.
+6. Run the relevant validation commands after making changes (relaunch `nvim`, `:checkhealth`).
+7. Review the final diff for unintended changes.
 
 Coding Guidelines:
  - Do not modify external plugins' code.
